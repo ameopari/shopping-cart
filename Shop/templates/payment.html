@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content%}
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+<form method="POST" enctype="multipart/form-data" >
+  {% csrf_token %}
+    <table>
+      <thead>
+          <th>Product user</th>
+          <th>product price</th>
+          <th>product quantity</th>
+          <th>product title </th>
+          <th>product description</th>
+          <th>product image</th>
+          <th>Total Price</th>
+      </thead>
+
+      <tbody>
+        {% for product in cartitem %}
+      <tr class="text-primary">
+          <td>{{product.cart.user}}</td>
+          <td>{{product.product.price}}</td> 
+          <td>{{product.quantity}}</td>
+          <td>{{product.product.title}}</td>
+          <td>{{product.product.description}}</td>
+                   
+          <td>{{product.get_price_total}}</td>
+          
+          <td><img src="{{product.product.image.url}}" height="50px" width="50px"></td>
+          
+
+        <!-- <td>  <a href="{% url 'showproduct' %}"><button type="submit" class="btn btn-primary">SHOW</button></a></td>  -->
+      
+
+      
+
+        
+      </tr>
+      {% endfor %}
+      <button type="button" id="price_1KC2JXSJi6pCV3fKSG57y83k" class="payment btn btn-primary">Payment</button></td> 
+
+      </tbody>
+      <!-- {% for x in l %}
+      <h2>product title - {{ x.item }}   || total price - {{ x.total_price }}</h2>
+      <img src="{{ x.img.url }}" alt="" style="max-width: 120px;">
+      {% endfor %} -->
+
+  </table>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function(){
+        $(document).on('click','.payment',function(){
+            console.log($(this).attr('id'))
+            $.ajax({
+                type: "POST",
+                crossDomain: true,
+
+                url: "{% url 'showproduct' %}",
+                data:{
+                    'price_id':($(this).attr('id')),
+                    'csrfmiddlewaretoken' : "{{ csrf_token }}"
+                },
+
+                cache: false,
+                timeout: 600000,
+                success: function (res) {
+                    console.log("response------>" + res);
+                    console.log(res.status,'============res.status')
+                    if(res.status == true){
+                        console.log('========================')
+                         window.location = res.session_url
+                    }
+                },
+            });
+        })
+    })
+</script>
+  {% endblock %}
+
+
+
+ 
+
